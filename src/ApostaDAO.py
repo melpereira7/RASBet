@@ -18,9 +18,10 @@ class ApostaDAO:
 
     def addF1(self,drivers,odds):
         self.mycursor.execute(f"INSERT INTO Aposta (sport) VALUES ('f1')")
-        id_driver_odd = self.mycursor.lastrowid
+        id_aposta = self.mycursor.lastrowid
         for driver, odd in zip(drivers,odds):
-            self.mycursor.execute(f"INSERT INTO DriverOdds (driver, odd, Aposta_id) VALUES {(driver,odd,id_driver_odd)}")
+            self.mycursor.execute(f"INSERT INTO DriverOdds (driver, odd, Aposta_id) VALUES {(driver,odd,id_aposta)}")
+            self.mydb.commit()
 
     def delete_all(self):
         self.mycursor.execute("SET SQL_SAFE_UPDATES = 0")

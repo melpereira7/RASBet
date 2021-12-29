@@ -14,7 +14,7 @@ class ApostaUserDAO:
     def add(self,result,amount,aposta_id,user_mail):
         val = (result,amount,aposta_id,user_mail)
         self.mycursor.execute(f"INSERT INTO ApostaUser (result,amount,Aposta_id,User_mail) VALUES {val}")
-        self.mycursor.commit()
+        self.mydb.commit()
     
     def get_all(self):
         betsUser = []
