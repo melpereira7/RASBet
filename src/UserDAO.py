@@ -17,3 +17,14 @@ class UserDAO:
     def get(self, mail):
         self.mycursor.execute(f"SELECT password FROM User WHERE mail = '{mail}'")
         return self.mycursor.fetchone()
+
+    def get_name(self,mail):
+        self.mycursor.execute(f"SELECT name FROM User WHERE mail = '{mail}'")
+        return self.mycursor.fetchone()
+    
+    def contains(self,mail):
+        self.mycursor.execute(f"SELECT * FROM User WHERE mail = '{mail}'")
+        if self.mycursor.fetchone() == 'None':
+            return False
+        else:
+            return True

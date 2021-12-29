@@ -38,15 +38,19 @@ class RASBet:
     def get_bets(self):
         return self.bets.get_all()
             
-    
     def adiciona_registo(self,mail,name,pw,credit):
         self.users.add(mail,name,pw,credit)
     
     def verifica_credenciais(self,mail,pw):
-        password = self.users.get(mail=mail)[0]
-        if password != 'None':
-            return pw == password
+        if self.users.contains(mail):
+            if pw == self.users.get(mail=mail)[0]:
+                return 'True'
+            else:
+                return 'False'
         else:
-            return False
+            return 'User'
+
+    def get_name(self,mail):
+        return self.users.get_name(mail)[0]
 
 
