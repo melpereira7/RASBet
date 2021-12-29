@@ -7,7 +7,7 @@ class ApostaDAO:
         self.mydb = mysql.connector.connect(
             host="localhost", 
             user="root", 
-            password="qwerty1234", 
+            password="root", 
             database="rasdb")
         self.mycursor = self.mydb.cursor()
 
