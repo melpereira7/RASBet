@@ -11,11 +11,13 @@ class ApostaUserDAO:
             database="rasdb")
         self.mycursor = self.mydb.cursor()
 
+     ## -- add aposta realizada a um user -- ##
     def add(self,result,amount,aposta_id,user_mail):
         val = (result,amount,aposta_id,user_mail)
         self.mycursor.execute(f"INSERT INTO ApostaUser (result,amount,Aposta_id,User_mail) VALUES {val}")
         self.mydb.commit()
     
+     ## -- get das apostas realizadas de um user -- ##
     def get_all(self):
         betsUser = []
         self.mycursor.execute(f"SELECT * FROM ApostaUser")

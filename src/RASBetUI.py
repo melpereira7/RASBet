@@ -1,5 +1,4 @@
 import textwrap
-import mysql.connector
 
 from RASBet import RASBet
 
@@ -26,15 +25,18 @@ class RASBetUI:
                     print(str(object=bet))
             elif op == 2:
                 mail = input("Enter your email: ")
-                name = input("Enter your name: ")
-                pw = input("Enter a password: ")
-                pw2 = input("Confirm your password: ")
-                if pw == pw2:
-                    credit = int(input("Enter an amount to deposit: "))
-                    self.rb.adiciona_registo(mail,name,pw,credit)
-                    print("You are now registered!")
+                if self.rb.contains_user(mail):
+                    print("Email já registado!")
                 else:
-                    print("The passwords do not match!")
+                    name = input("Enter your name: ")
+                    pw = input("Enter a password: ")
+                    pw2 = input("Confirm your password: ")
+                    if pw == pw2:
+                        credit = int(input("Enter an amount to deposit: "))
+                        self.rb.adiciona_registo(mail,name,pw,credit)
+                        print("You are now registered!")
+                    else:
+                        print("The passwords do not match!")
             elif op == 3:
                 mail = input("Enter your email: ")
                 pw = input("Enter your password: ")
@@ -65,12 +67,16 @@ class RASBetUI:
                 for bet in self.rb.get_bets():
                     print(str(object=bet))
             elif op == 2:
-                pass
+                pass # realizar uma aposta - checkar dados e adcionar na bd
             elif op == 3:
-                pass
+                pass # add creditos - checkar dados e adicionar ao user na bd
             elif op == 4:
-                pass
+                pass # levantar creditos - checkar, decrementar no user e supostamente fazer trsnaferencia
             elif op == 5:
-                pass
+                pass # listar apostas de determinado user
+            else:
+                pass # erro
+            ################ ADD FUNCIONALIDADES NOVAS ###############
             op = int(self.menuUser(name))
-        #termina sessão
+        if op == 0:
+            pass # terminar sessão

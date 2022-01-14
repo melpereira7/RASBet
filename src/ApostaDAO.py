@@ -11,6 +11,7 @@ class ApostaDAO:
             database="rasdb")
         self.mycursor = self.mydb.cursor()
 
+    ## -- add apostas de diferentes tipos -- ##
     def addFootball(self,sport,home_team,away_team,odd_home,odd_tie,odd_away):
         val = (sport,home_team,away_team,odd_home,odd_tie,odd_away)
         self.mycursor.execute(f"INSERT INTO Aposta (sport,home_team,away_team,odd_home,odd_tie,odd_away) VALUES {val}")
@@ -23,12 +24,14 @@ class ApostaDAO:
             self.mycursor.execute(f"INSERT INTO DriverOdds (driver, odd, Aposta_id) VALUES {(driver,odd,id_aposta)}")
             self.mydb.commit()
 
+     ## -- delete todas as apostas na bd (feito sempre que há acesso à API para update) -- ##
     def delete_all(self):
         self.mycursor.execute("SET SQL_SAFE_UPDATES = 0")
         self.mycursor.execute("DELETE FROM DriverOdds")
         self.mycursor.execute("DELETE FROM Aposta")
         self.mycursor.execute("SET SQL_SAFE_UPDATES = 1")
 
+     ## -- get de todas as apostas disponíveis na bd -- ##
     def get_all(self):
         bets = []
         drivers = []
