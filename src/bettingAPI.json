@@ -2,6 +2,7 @@
   "listEventsAll": [
     {
       "event": {
+        "id": 1,
         "sport": "soccer",
         "type": "full time",
         "team1": "barcelona",
@@ -15,6 +16,7 @@
     },
     {
       "event": {
+        "id": 2,
         "sport": "soccer",
         "type": "full time",
         "team1": "villareal",
@@ -28,6 +30,7 @@
     },
     {
       "event": {
+        "id": 3,
         "sport": "f1",
         "drivers": ["a","b","c"],
         "odds": [1,2,3]

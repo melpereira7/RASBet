@@ -18,7 +18,7 @@ class RASBet:
         
     ## -- buscar dados à api e guardar na bd -- ##
     def get_bets_all(self):
-        # access BettingAPI - RESTApi - ver como aceder em python
+        # access BettingAPI - RESTApi
         data = json.loads(requests.get(self.URL).text)
         normalized_dict = pd.json_normalize(data, record_path=['listEventsAll'])
         data = pd.DataFrame.from_dict(normalized_dict, orient='columns')
@@ -26,9 +26,9 @@ class RASBet:
         for index in data.index:
             d = data.iloc[index]
             if d['event.sport'] == 'soccer' or d['event.sport'] == 'football':
-                self.bets.addFootball(d['event.sport'],d['event.team1'],d['event.team2'],d['event.result_odd.home'],d['event.result_odd.tie'],d['event.result_odd.away'])
+                self.bets.addFootball(d['event.id'],d['event.sport'],d['event.team1'],d['event.team2'],d['event.result_odd.home'],d['event.result_odd.tie'],d['event.result_odd.away'])
             elif d['event.sport'] == 'f1':
-                self.bets.addF1(d['event.drivers'],d['event.odds'])
+                self.bets.addF1(d['event.id'],d['event.drivers'],d['event.odds'])
         t = threading.Timer(60,self.get_bets_all)
         t.daemon = True
         t.start()

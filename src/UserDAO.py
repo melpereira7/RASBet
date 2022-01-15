@@ -28,7 +28,7 @@ class UserDAO:
      ## -- checkar se existe um user com determinado mail na bd -- ##
     def contains(self,mail):
         self.mycursor.execute(f"SELECT * FROM User WHERE mail = '{mail}'")
-        if self.mycursor.fetchone() == 'None':
-            return False
-        else:
+        if self.mycursor.fetchone():
             return True
+        else:
+            return False

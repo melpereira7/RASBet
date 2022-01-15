@@ -12,14 +12,13 @@ class ApostaDAO:
         self.mycursor = self.mydb.cursor()
 
     ## -- add apostas de diferentes tipos -- ##
-    def addFootball(self,sport,home_team,away_team,odd_home,odd_tie,odd_away):
-        val = (sport,home_team,away_team,odd_home,odd_tie,odd_away)
-        self.mycursor.execute(f"INSERT INTO Aposta (sport,home_team,away_team,odd_home,odd_tie,odd_away) VALUES {val}")
+    def addFootball(self,id_aposta,sport,home_team,away_team,odd_home,odd_tie,odd_away):
+        val = (sport,id_aposta,home_team,away_team,odd_home,odd_tie,odd_away)
+        self.mycursor.execute(f"INSERT INTO Aposta (sport,id,home_team,away_team,odd_home,odd_tie,odd_away) VALUES {val}")
         self.mydb.commit()
 
-    def addF1(self,drivers,odds):
-        self.mycursor.execute(f"INSERT INTO Aposta (sport) VALUES ('f1')")
-        id_aposta = self.mycursor.lastrowid
+    def addF1(self,id_aposta,drivers,odds):
+        self.mycursor.execute(f"INSERT INTO Aposta (id,sport) VALUES {(id_aposta,'f1')}")
         for driver, odd in zip(drivers,odds):
             self.mycursor.execute(f"INSERT INTO DriverOdds (driver, odd, Aposta_id) VALUES {(driver,odd,id_aposta)}")
             self.mydb.commit()
