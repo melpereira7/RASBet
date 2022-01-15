@@ -1,5 +1,6 @@
-class FootballBet:
+from DriverOddsDAO import DriverOddsDAO
 
+class FootballBet:
     def __init__(self,id,sport,home_team,away_team,odd_home,odd_tie,odd_away):
         self.id = id
         self.sport = sport
@@ -15,13 +16,13 @@ class FootballBet:
             str(self.odd_tie) + " | odd_away: " + str(self.odd_away) + "}"
 
 class F1Bet:
-
-    def __init__(self,id,sport,drivers,odds):
-        self.id = id
+    def __init__(self,id_aposta,sport):
+        self.id = id_aposta
         self.sport = sport
-        self.drivers = drivers
-        self.odds = odds
+        self.driver_odds = DriverOddsDAO()
 
     def __str__(self) -> str:
-        return "{id: " + str(self.id) + " sport: " + self.sport + " | drivers: [" + ",".join(self.drivers) +\
-            "] | odds: [" + ",".join([str(element) for element in self.odds]) + "]}"
+        return "{id: " + str(self.id) + " sport: " + self.sport + " | drivers and odds: " + str(self.driver_odds.get_all(self.id)) + "]}"
+
+    def get_driver_odds(self):
+        self.driver_odds.get_all(self.id)

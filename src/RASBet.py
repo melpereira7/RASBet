@@ -5,7 +5,6 @@ import pandas as pd
 
 from ApostaDAO import ApostaDAO
 from UserDAO import UserDAO
-from ApostaUserDAO import ApostaUserDAO
 
 
 class RASBet:
@@ -15,7 +14,7 @@ class RASBet:
         self.autenticado = ""
         self.bets = ApostaDAO() # -- data object access
         self.users = UserDAO()
-        
+
     ## -- buscar dados à api e guardar na bd -- ##
     def get_bets_all(self):
         # access BettingAPI - RESTApi
@@ -33,13 +32,21 @@ class RASBet:
         t.daemon = True
         t.start()
 
+    ## -- mail do user autenticado -- ##
+    def set_autenticado(self,mail):
+        self.autenticado = mail
+
     ## -- buscar apostas disponíveis -- ##
     def get_bets(self):
         return self.bets.get_all()
+
+    def get_bet(self,idAposta):
+        return self.bets.get_bet(idAposta)
     
     ## -- adicionar novo user -- ##
-    def adiciona_registo(self,mail,name,pw,credit): 
-        self.users.add(mail,name,pw,credit)
+    def adiciona_registo(self,mail,name,pw,moeda,credit): 
+        self.users.add(mail,name,pw)
+        self.users.get_user(mail).add_creditos(moeda,credit)
     
     ## -- get do nome de determinado user -- ##
     def verifica_credenciais(self,mail,pw):
@@ -59,4 +66,25 @@ class RASBet:
     def contains_user(self,mail):
         return self.users.contains(mail);
 
+    def executa_transferencia(self, n, iban):
+        # send the money to the iban account
+        print(f"You will get the {n} in your account in 5 week days.")
+            
+    def levantar_creditos(self, n, iban, moeda):
+        user = self.users.get_user(self.autenticado)
+        (creditos,) = user.get_creditos(moeda)
+        if creditos - n < 0:
+            return False
+        else:
+            user.subtrai_creditos(n, moeda)
+            self.executa_transferencia(n, iban)
+            return True
 
+    def add_credits(self,creditos,moeda):
+        user = self.users.get_user(self.autenticado)
+        user.add_creditos(creditos,moeda)
+
+    def get_bets_user(self):
+        user = self.users.get_user(self.autenticado)
+        return user.bets.get_all()
+        

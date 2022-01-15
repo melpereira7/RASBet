@@ -32,8 +32,9 @@ class RASBetUI:
                     pw = input("Enter a password: ")
                     pw2 = input("Confirm your password: ")
                     if pw == pw2:
-                        credit = int(input("Enter an amount to deposit: "))
-                        self.rb.adiciona_registo(mail,name,pw,credit)
+                        credit = float(input("Enter an amount to deposit: "))
+                        moeda = self.selectCode()
+                        self.rb.adiciona_registo(mail,name,pw,moeda,credit)
                         print("You are now registered!")
                     else:
                         print("The passwords do not match!")
@@ -42,6 +43,7 @@ class RASBetUI:
                 pw = input("Enter your password: ")
                 valido = self.rb.verifica_credenciais(mail,pw)
                 if valido == 'True':
+                    self.rb.set_autenticado(mail)
                     self.runUser(self.rb.get_name(mail))
                 elif valido == 'False':
                     print("Wrong password, please try again")
@@ -52,31 +54,96 @@ class RASBetUI:
     def menuUser(self,name):
         return input(textwrap.dedent(f'''
                 Bem-vind@, {name}!
-                1 - Listar apostas disponíveis
-                2 - Realizar aposta
-                3 - Adicionar créditos
-                4 - Levantar créditos
-                5 - Listar apostas realizadas
+                1 - Realizar aposta
+                2 - Adicionar créditos
+                3 - Levantar créditos
+                4 - Listar apostas realizadas
                 0 - Terminar sessão
                 '''))
+
+    def selectCode(self):
+        moeda = ''
+        while not (moeda == 'EUR' or moeda == 'USD' or moeda == 'GBP' or moeda== 'ADA'):
+            print("---------- MOEDAS -----------")
+            print("EUR - Euro (€)")
+            print("USD - United States dollar ($)")
+            print("GBP - Pound Sterling (£)")
+            print("ADA - Cardano ")
+            moeda = input("Seleciona o código da moeda pretendia: ")
+        return moeda
         
     def runUser(self,name):
+        
         op = int(self.menuUser(name))
         while op != 0:
             if op == 1:
+                # realizar uma aposta - checkar dados e adcionar na bd
                 for bet in self.rb.get_bets():
                     print(str(object=bet))
+                          
+                print("Escolha o id da sua aposta:")
+                id_aposta = int(input())
+                bet =  self.rb.get_bet(id_aposta)
+                if bet.sport == 'soccer' or bet.sport == 'football':
+                    print("    1      X      2")
+                    print("  " + str(bet.odd_home) + "  " + 
+                          str(bet.odd_tie) + "  "  + str(bet.odd_away))
+                    print("Qual a sua aposta 1 X 2 ?")
+                    tipo = str(input())
+                    if tipo =='1':
+                        percentagem = bet.odd_home
+                    elif tipo=='X':
+                        percentagem = bet.odd_tie
+                    elif tipo=='2':
+                        percentagem = bet.odd_away
+                    else:
+                        break
+                   
+
+
+
+                elif bet.sport == 'f1':
+                    
+                    print("***ID CONDUTOR***. ***Nome condutor***.***ODDS***.")
+                    n = 1
+                    for  elem,odd in zip(bet.get_driver_odds()): 
+                        print("("+ n + ") |                " + elem+"       |                "+str(odd))
+                    print("Qual o competidor que deseja apostar?") 
+                    competidor = str(input())
+                    percentagem = bet.odds[n-1]
+                    
+
+           
+                user = self.rb.users.get_user(self.rb.autenticado)
+                print("As suas carteiras. A partir de qual deseja apostar?")
+                dic = user.get_all()
+                for key, value in dic.items():
+                    print(key, value)
+                    wallet = str(input())
+           
             elif op == 2:
-                pass # realizar uma aposta - checkar dados e adcionar na bd
+                creditos = float(input("Enter the number of credits: "))
+                moeda = self.selectCode()
+                self.rb.add_credits(creditos,moeda)
             elif op == 3:
-                pass # add creditos - checkar dados e adicionar ao user na bd
+                valido = False
+                count = 0
+                n = float(input("Enter the number of credits: "))
+                iban = input("Enter your IBAN: ")
+                moeda = self.selectCode()
+                while not valido and count < 3:
+                    valido = self.rb.levantar_creditos(n, iban, moeda)
+                    if not valido:
+                        print("Não existem tantos créditos na sua conta, tente novamente ")
+                if count == 3:
+                    print("You exceed the number of try")
             elif op == 4:
-                pass # levantar creditos - checkar, decrementar no user e supostamente fazer trsnaferencia
-            elif op == 5:
-                pass # listar apostas de determinado user
+                lista = self.rb.get_bets_user()
+                for elem in lista:
+                    print(elem)
             else:
-                pass # erro
+                print("Escolha uma oção das disponíveis.")
             ################ ADD FUNCIONALIDADES NOVAS ###############
             op = int(self.menuUser(name))
         if op == 0:
-            pass # terminar sessão
+            self.rb.set_autenticado('') # terminar sessão

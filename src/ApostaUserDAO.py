@@ -18,9 +18,9 @@ class ApostaUserDAO:
         self.mydb.commit()
     
      ## -- get das apostas realizadas de um user -- ##
-    def get_all(self):
+    def get_all(self,mail):
         betsUser = []
-        self.mycursor.execute(f"SELECT * FROM ApostaUser")
+        self.mycursor.execute(f"SELECT * FROM ApostaUser WHERE User_mail = '{mail}'")
         for (id,result,amount,aposta_id,user_mail) in self.mycursor.fetchall():
             betUser = ApostaUser(id,result,amount,aposta_id,user_mail)
             betsUser.append(betUser)

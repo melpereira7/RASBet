@@ -14,13 +14,16 @@ class ApostaDAO:
     ## -- add apostas de diferentes tipos -- ##
     def addFootball(self,id_aposta,sport,home_team,away_team,odd_home,odd_tie,odd_away):
         val = (sport,id_aposta,home_team,away_team,odd_home,odd_tie,odd_away)
-        self.mycursor.execute(f"INSERT INTO Aposta (sport,id,home_team,away_team,odd_home,odd_tie,odd_away) VALUES {val}")
+        self.mycursor.execute(f"INSERT INTO Aposta (sport,id,home_team,away_team,odd_home,odd_tie,odd_away) VALUES {val} \
+                                ON DUPLICATE KEY UPDATE home_team='{home_team}' AND away_team='{away_team}' AND odd_home='{odd_home}' AND odd_tie='{odd_tie}' AND odd_away='{odd_away}'")
         self.mydb.commit()
 
     def addF1(self,id_aposta,drivers,odds):
-        self.mycursor.execute(f"INSERT INTO Aposta (id,sport) VALUES {(id_aposta,'f1')}")
+        self.mycursor.execute(f"INSERT INTO Aposta (id,sport) VALUES {(id_aposta,'f1')} \
+                                ON DUPLICATE KEY UPDATE id='{id_aposta}'")
         for driver, odd in zip(drivers,odds):
-            self.mycursor.execute(f"INSERT INTO DriverOdds (driver, odd, Aposta_id) VALUES {(driver,odd,id_aposta)}")
+            self.mycursor.execute(f"INSERT INTO DriverOdds (driver, odd, Aposta_id) VALUES {(driver,odd,id_aposta)} \
+                                    ON DUPLICATE KEY UPDATE driver='{driver}' AND odd='{odd}' AND Aposta_id='{id_aposta}'")
             self.mydb.commit()
 
      ## -- delete todas as apostas na bd (feito sempre que há acesso à API para update) -- ##
@@ -40,10 +43,20 @@ class ApostaDAO:
             if sport == 'soccer' or sport == 'football':
                 bet = FootballBet(id_aposta,sport,home_team,away_team,home_odd,tie_odd,away_odd)
             elif sport == 'f1':
-                self.mycursor.execute(f"SELECT * FROM DriverOdds WHERE Aposta_id = {id_aposta}")
-                for (_,driver,odd,_) in self.mycursor.fetchall():
-                    drivers.append(driver)
-                    odds.append(odd)
-                bet = F1Bet(id_aposta,sport,drivers,odds)
+                bet = F1Bet(id_aposta,sport)
             bets.append(bet)
         return bets
+
+    def get_bet(self, id):
+        drivers = []
+        odds = []
+        self.mycursor.execute(f'SELECT * FROM Aposta where id={id}')
+        (id_aposta, sport, home_team, away_team, home_odd,
+         tie_odd, away_odd) = self.mycursor.fetchone()
+        if sport == 'soccer' or sport == 'football':
+            bet = FootballBet(id_aposta, sport, home_team,
+                              away_team, home_odd, tie_odd, away_odd)
+        elif sport == 'f1':
+            bet = F1Bet(id_aposta, sport) 
+        return bet
+        

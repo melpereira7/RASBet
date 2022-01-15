@@ -1,5 +1,7 @@
 import mysql.connector
 
+from User import User
+
 class UserDAO:
     def __init__(self) -> None:
         self.mydb = mysql.connector.connect(
@@ -10,10 +12,11 @@ class UserDAO:
         self.mycursor = self.mydb.cursor()
     
      ## -- add user à bd -- ##
-    def add(self, mail, name, pw, credit):
-        val = (mail,name,pw,credit)
-        self.mycursor.execute(f"INSERT INTO User (mail, name, password, credits) VALUES {val}")
+    def add(self, mail, name, pw, moeda, credit):
+        val = (mail,name,pw)
+        self.mycursor.execute(f"INSERT INTO User (mail, name, password) VALUES {val}")
         self.mydb.commit()
+        self.mycursor.execute(f"INSERT INTO CreditosUser (moeda, creditos, User_mail) VALUES {moeda,credit,mail}")
 
      ## -- get password de um user -- ##
     def get_password(self, mail):
@@ -32,3 +35,8 @@ class UserDAO:
             return True
         else:
             return False
+
+    def get_user(self, email):
+        self.mycursor.execute(f"SELECT * FROM User WHERE mail='{email}'")
+        mail, nome, pw = self.mycursor.fetchone()
+        return User(mail, nome, pw)
