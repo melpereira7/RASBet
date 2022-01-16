@@ -18,7 +18,7 @@ USE `rasdb` ;
 -- Table `rasdb`.`Aposta`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `rasdb`.`Aposta` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL,
   `sport` VARCHAR(45) NOT NULL,
   `home_team` VARCHAR(45) NULL DEFAULT NULL,
   `away_team` VARCHAR(45) NULL DEFAULT NULL,
@@ -38,7 +38,6 @@ CREATE TABLE IF NOT EXISTS `rasdb`.`User` (
   `mail` VARCHAR(45) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
-  `credits` INT NOT NULL,
   PRIMARY KEY (`mail`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
@@ -70,11 +69,10 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `rasdb`.`DriverOdds`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `rasdb`.`DriverOdds` (
-  `idDriverOdds` INT NOT NULL AUTO_INCREMENT,
   `driver` VARCHAR(45) NOT NULL,
   `odd` DOUBLE NOT NULL,
   `Aposta_id` INT NOT NULL,
-  PRIMARY KEY (`idDriverOdds`),
+  PRIMARY KEY (`driver`, `Aposta_id`),
   INDEX `fk_DriverOdds_Aposta1_idx` (`Aposta_id` ASC) VISIBLE,
   CONSTRAINT `fk_DriverOdds_Aposta1`
     FOREIGN KEY (`Aposta_id`)
@@ -84,6 +82,23 @@ CREATE TABLE IF NOT EXISTS `rasdb`.`DriverOdds` (
 ENGINE = InnoDB
 AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rasdb`.`CreditosUser`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rasdb`.`CreditosUser` (
+  `moeda` VARCHAR(45) NOT NULL,
+  `creditos` DOUBLE NOT NULL,
+  `User_mail` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`moeda`, `User_mail`),
+  INDEX `fk_CreditosUser_User1_idx` (`User_mail` ASC) VISIBLE,
+  CONSTRAINT `fk_CreditosUser_User1`
+    FOREIGN KEY (`User_mail`)
+    REFERENCES `rasdb`.`User` (`mail`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

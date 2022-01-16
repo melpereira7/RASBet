@@ -11,7 +11,7 @@ class FootballBet:
         self.odd_away = odd_away
 
     def __str__(self) -> str:
-        return "{id: " + str(self.id) + " sport: " + self.sport + " | home_team: " + self.home_team +\
+        return "{id: " + str(self.id) + " | sport: " + self.sport + " | home_team: " + self.home_team +\
             " | away_team: " + self.away_team + " | odd_home: " + str(self.odd_home) + " | odd_tie: " +\
             str(self.odd_tie) + " | odd_away: " + str(self.odd_away) + "}"
 
@@ -22,7 +22,7 @@ class F1Bet:
         self.driver_odds = DriverOddsDAO()
 
     def __str__(self) -> str:
-        return "{id: " + str(self.id) + " sport: " + self.sport + " | drivers and odds: " + str(self.driver_odds.get_all(self.id)) + "]}"
+        return "{id: " + str(self.id) + " | sport: " + self.sport + " | drivers and odds: " + str(self.driver_odds.get_all(self.id)) + "]}"
 
     def get_driver_odds(self):
-        self.driver_odds.get_all(self.id)
+        return self.driver_odds.get_all(self.id)

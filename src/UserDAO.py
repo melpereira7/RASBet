@@ -12,11 +12,10 @@ class UserDAO:
         self.mycursor = self.mydb.cursor()
     
      ## -- add user à bd -- ##
-    def add(self, mail, name, pw, moeda, credit):
+    def add(self, mail, name, pw):
         val = (mail,name,pw)
         self.mycursor.execute(f"INSERT INTO User (mail, name, password) VALUES {val}")
         self.mydb.commit()
-        self.mycursor.execute(f"INSERT INTO CreditosUser (moeda, creditos, User_mail) VALUES {moeda,credit,mail}")
 
      ## -- get password de um user -- ##
     def get_password(self, mail):

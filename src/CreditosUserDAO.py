@@ -11,14 +11,17 @@ class CreditosUserDAO:
 
     def get_all(self,mail):
         credit = {}
-        self.mycursor.execute(f"SELECT * FROM CreditosUser WHERE User_mail = {mail}")
+        self.mycursor.execute(f"SELECT * FROM CreditosUser WHERE User_mail = '{mail}'")
         for (moeda,creditos,_) in self.mycursor.fetchall():
             credit.update({moeda:creditos})
         return credit
-
+    
     def add_creditos(self,mail,credit,moeda):
-        self.mycursor.execute(f"INSERT INTO CreditosUser (moeda, creditos, User_mail) VALUES {moeda,credit,mail} \
-                                            ON DUPLICATE KEY UPDATE creditos = creditos + {credit}")
+        self.mycursor.execute(f"INSERT INTO CreditosUser (moeda, creditos, User_mail) VALUES {(moeda,credit,mail)}")
+        self.mydb.commit()
+
+    def update_creditos(self,mail,credit,moeda):
+        self.mycursor.execute(f"UPDATE CreditosUser SET creditos=creditos+{credit} WHERE User_mail='{mail}' AND moeda='{moeda}'")
         self.mydb.commit()
 
     def get_creditos(self, mail, moeda):
@@ -28,7 +31,10 @@ class CreditosUserDAO:
     def subtrai_creditos(self, mail, credit, moeda):
         self.mycursor.execute(f"UPDATE CreditosUser SET creditos = creditos - {credit} WHERE User_mail = '{mail}' AND moeda = '{moeda}'")
         self.mydb.commit()
-
-    def get_all_creditos(self,mail):
-        self.mycursor.execute(f"SELECT SUM(creditos) FROM CreditosUser WHERE User_mail = {mail}")
-        return self.mycursor.fetchone()
+    
+    def contains(self,moeda):
+        self.mycursor.execute(f"SELECT moeda FROM CreditosUser WHERE moeda = '{moeda}'")
+        if self.mycursor.fetchone():
+            return True
+        else:
+            return False

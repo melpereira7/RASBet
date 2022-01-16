@@ -10,8 +10,8 @@ class DriverOddsDAO:
         self.mycursor = self.mydb.cursor()
 
     def get_all(self,id_aposta):
-        driverOdds = {}
+        driver_odds = {}
         self.mycursor.execute(f"SELECT * FROM DriverOdds WHERE Aposta_id = {id_aposta}")
-        for (_,driver,odd,_) in self.mycursor.fetchall():
-            driverOdds.update({driver:odd})
-        return driverOdds
+        for (driver,odd,_) in self.mycursor.fetchall():
+            driver_odds.update({driver:odd})
+        return driver_odds
