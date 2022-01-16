@@ -66,10 +66,10 @@ class RASBetUI:
         return input(textwrap.dedent(f'''
                 Welcome, {name}!
                 1 - Make bet
-                2 - Add credits         ################# NOT WORKING - add de créditos
+                2 - Add credits         
                 3 - Draw credits
                 4 - List your bets
-                5 - Eschange credits    ################# NOT WORKING - add de créditos
+                5 - Eschange credits   
                 0 - Logout
                 '''))
 
@@ -124,7 +124,7 @@ class RASBetUI:
                 if bet.sport == 'soccer' or bet.sport == 'football':
                     my_table = PrettyTable()
                     my_table.field_names = ["1", "X", "2"]
-                    my_table.add_row[bet.odd_home, bet.odd_tie, bet.odd_away]
+                    my_table.add_row([bet.odd_home, bet.odd_tie, bet.odd_away])
                     tipo=''
                     while not (tipo =='1' or tipo=='X' or tipo=='2'):
                         tipo = str(input("What's your bet ->  1 X 2 ?"))
@@ -151,7 +151,7 @@ class RASBetUI:
                         if answer=='y':        
                             self.rb.subtrai_credits_user(credit,wallet)
                             self.rb.add_bet_user(tipo,credit,id_aposta)
-                            print("Bet successful registered!")
+                            print("Bet successfully registered!")
                     elif bet.sport=='f1':
                         answer = input(f"Click 'y' to confirm your bet on driver {tipo}[y/n]\n")
                         if answer=='y':        
