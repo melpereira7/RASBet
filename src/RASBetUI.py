@@ -1,5 +1,6 @@
 import textwrap
 from prettytable import PrettyTable
+from getpass import getpass
 
 from RASBet import RASBet
 
@@ -39,8 +40,8 @@ class RASBetUI:
                     print("Email já registado!")
                 else:
                     name = input("Enter your name: ")
-                    pw = input("Enter a password: ")
-                    pw2 = input("Confirm your password: ")
+                    pw = getpass("Enter a password: ")
+                    pw2 = getpass("Confirm your password: ")
                     if pw == pw2:
                         credit = float(input("Enter an amount to deposit: "))
                         moeda = self.selectCode()
@@ -51,7 +52,7 @@ class RASBetUI:
             elif op == 4:
                 mail = input("Enter your email: ")
                 if self.rb.contains_user(mail):
-                    pw = input("Enter your password: ")  
+                    pw = getpass("Enter your password: ")  
                     valido = self.rb.verifica_credenciais(mail,pw)
                     if valido == 'True':
                         self.rb.set_autenticado(mail)
