@@ -2,7 +2,7 @@ import textwrap
 from prettytable import PrettyTable
 from getpass import getpass
 
-from RASBet import RASBet
+from Controller.RASBet import RASBet
 
 class RASBetUI:
 

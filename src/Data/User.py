@@ -1,5 +1,6 @@
-from ApostaUserDAO import ApostaUserDAO
-from CreditosUserDAO import CreditosUserDAO
+
+from Data.ApostaUserDAO import ApostaUserDAO
+from Data.CreditosUserDAO import CreditosUserDAO
 
 class User:
     def __init__(self,mail,name,pw):

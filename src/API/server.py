@@ -9,14 +9,14 @@ api = Api(app)
 class Info(Resource):
     @staticmethod
     def get():
-        f = open('./bettingAPI.json')
+        f = open('./API/bettingAPI.json')
         data = json.load(f)
         return data, 200
 
 class Exchange(Resource):
     @staticmethod
     def get():
-        f = open('./cambioAPI.json')
+        f = open('./API/cambioAPI.json')
         data = json.load(f)
         return data, 200
 

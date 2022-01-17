@@ -1,4 +1,4 @@
-from DriverOddsDAO import DriverOddsDAO
+from Data.DriverOddsDAO import DriverOddsDAO
 
 class FootballBet:
     def __init__(self,id,sport,home_team,away_team,odd_home,odd_tie,odd_away):

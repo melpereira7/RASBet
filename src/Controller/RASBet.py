@@ -3,8 +3,8 @@ import json
 import requests
 import pandas as pd
 
-from ApostaDAO import ApostaDAO
-from UserDAO import UserDAO
+from Data.ApostaDAO import ApostaDAO
+from Data.UserDAO import UserDAO
 
 
 class RASBet:

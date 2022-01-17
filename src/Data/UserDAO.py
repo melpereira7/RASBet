@@ -1,6 +1,6 @@
 import mysql.connector
 
-from User import User
+from Data.User import User
 
 class UserDAO:
     def __init__(self) -> None:
