@@ -1,6 +1,6 @@
 import mysql.connector
 
-from Data.Bet import FootballBet, F1Bet
+from LN.Bet import FootballBet, F1Bet
 
 class ApostaDAO:
     def __init__(self) -> None:
