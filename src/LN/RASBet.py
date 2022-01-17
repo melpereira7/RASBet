@@ -64,9 +64,9 @@ class RASBet:
     ## -- get do nome de determinado user -- ##
     def verifica_credenciais(self,mail,pw):
         if pw == self.users.get_password(mail=mail)[0]:
-            return 'True'
+            return True
         else:
-            return 'False'
+            return False
 
     ## -- get do nome de determinado user -- ##
     def get_name(self,mail):

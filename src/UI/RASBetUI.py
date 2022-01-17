@@ -50,15 +50,21 @@ class RASBetUI:
                     else:
                         print("The passwords do not match!")
             elif op == 4:
+                count = 0
                 mail = input("Enter your email: ")
                 if self.rb.contains_user(mail):
                     pw = getpass("Enter your password: ")  
                     valido = self.rb.verifica_credenciais(mail,pw)
-                    if valido == 'True':
+                    while not valido and count<2:
+                        print("Wrong password, please try again")
+                        count+=1
+                        pw = getpass("Enter your password: ")  
+                        valido = self.rb.verifica_credenciais(mail,pw)
+                    if count==2:
+                        print("You exceeded the number of tries!")
+                    else:
                         self.rb.set_autenticado(mail)
                         self.runUser(self.rb.get_name(mail))
-                    elif valido == 'False':
-                        print("Wrong password, please try again")
                 else:
                     print("User does not exist")
             op = int(self.menu())
@@ -70,7 +76,7 @@ class RASBetUI:
                 2 - Add credits         
                 3 - Draw credits
                 4 - List your bets
-                5 - Eschange credits   
+                5 - Exchange credits   
                 0 - Logout
                 '''))
 
@@ -82,7 +88,7 @@ class RASBetUI:
             print("USD - United States Dollar ($)")
             print("GBP - Pound Sterling (£)")
             print("ADA - Cardano ")
-            moeda = input("Select the desired currency: \n")
+            moeda = input("Enter the code of the desired currency: \n")
         return moeda
    
     def selectDriver(self,dic):
@@ -171,19 +177,12 @@ class RASBetUI:
                 print('\033c')
                 valido = False
                 count = 0
+                iban = input("Enter your IBAN: ")
                 n = float(input("Enter the number of credits: "))
                 moeda = self.selectCode()
-                iban = input("Enter your IBAN: ")
-                while not valido and count < 3:
-                    valido = self.rb.levantar_creditos(n, iban, moeda)
-                    if not valido:
-                        print("You don't enough credits in your account")
-                        count=+1
-                        n = float(input("Enter the number of credits: "))
-                        moeda = self.selectCode()
-                        valido = self.rb.levantar_creditos(n, iban, moeda)
-                if count == 3:
-                    print("You exceeded the number of tries") 
+                valido = self.rb.levantar_creditos(n, iban, moeda)
+                if not valido:
+                    print("You don't enough credits in the chosen wallet")
             elif op == 4:
                 print('\033c')
                 for bet in self.rb.get_bets_user():
