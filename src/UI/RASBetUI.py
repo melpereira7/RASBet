@@ -108,7 +108,7 @@ class RASBetUI:
         while not (int(identification) in ids):
             print("+++++++++++++++++++++ BETs ++++++++++++++++++++++")
             my_table = PrettyTable()
-            my_table.field_names = ["ODD id", "SPORT", "DETAILS"]
+            my_table.field_names = ["Bet id", "SPORT", "DETAILS"]
             for obj in dic:
                 if obj.sport=='soccer' or obj.sport=='football':
                    my_table.add_row([str(obj.id), obj.sport, obj.home_team+'-'+obj.away_team])
@@ -150,7 +150,9 @@ class RASBetUI:
                     print(key, value)
                 wallet = self.selectCode()
                 credit = float(input("How much credits do you wish to spend?\n"))
-                if credit>self.rb.get_credits_user(wallet)[0] or credit<=0:
+                if self.rb.get_credits_user(wallet) is None:
+                    print("You don't have this wallet")
+                elif credit>self.rb.get_credits_user(wallet)[0] or credit<=0:
                     print("You don't have enough credits to do this action.")
                 else:
                     if bet.sport=='soccer' or bet.sport=='football':
@@ -168,21 +170,26 @@ class RASBetUI:
             elif op == 2:
                 print('\033c')
                 creditos = float(input("Enter the number of credits: "))
-                moeda = self.selectCode()
-                if self.rb.user_contains_code(moeda):
-                    self.rb.update_credits(creditos,moeda)
+                if(creditos>=5):    
+                    moeda = self.selectCode()
+                    if self.rb.user_contains_code(moeda):
+                        self.rb.update_credits(creditos,moeda)
+                    else:
+                        self.rb.add_credits(creditos,moeda)
                 else:
-                    self.rb.add_credits(creditos,moeda)
+                    print("The minimum number of credits to add is 5!")
             elif op == 3:
                 print('\033c')
                 valido = False
-                count = 0
                 iban = input("Enter your IBAN: ")
                 n = float(input("Enter the number of credits: "))
-                moeda = self.selectCode()
-                valido = self.rb.levantar_creditos(n, iban, moeda)
-                if not valido:
-                    print("You don't enough credits in the chosen wallet")
+                if(n>=5):
+                    moeda = self.selectCode()
+                    valido = self.rb.levantar_creditos(n, iban, moeda)
+                    if not valido:
+                        print("You don't enough credits in the chosen wallet")
+                else:
+                    print("The minimum number of credits to draw is 5!")
             elif op == 4:
                 print('\033c')
                 for bet in self.rb.get_bets_user():
